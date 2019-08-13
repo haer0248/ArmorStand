@@ -254,6 +254,32 @@
 
     </div>
 
+    <div class="right card">
+        <span style="cursor: pointer;" onclick="javascript:$('#saveandload').slideToggle();">
+            + 保存與讀取
+        </span>	
+        <div id="saveandload">
+            <div class="padding">
+                <div id="save" class="padding underline">
+                    <p>
+                        儲存你目前的盔甲座設定
+                    </p>
+                    <input type="text" name="creationname" id="creationname" placeholder="我的盔甲座"/>
+                    <button style="display:inline-block" id="savecreation" onclick="javascript:saveData();">儲存</button><br>
+                </div>
+                <div id="load" class="padding underline">
+                    <p id="loadmessage">
+                        讀取你的盔甲座設定
+                    </p>
+                    <div id="loadlistopts">
+                        <select id="loadlist"></select>
+                        <button id="loadcreation" style="display:inline-block;" onclick="javascript:loadData($(`#loadlist`).val());">讀取</button>
+                        <button id="deletesave" style="display:inline-block;" onclick="javascript:deleteSave($(`#loadlist`).val());">刪除</button><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="right card">
         <span style="cursor: pointer;" onclick="javascript:$('#getcommandblock').slideToggle();">
