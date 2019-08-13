@@ -183,13 +183,13 @@ $(document).ready(function(){
 });
 
 function loadScreen() {
-	$(`#creationname`).attr(`placeholder`, `My Armor Stand #${localStorage.length + 1}`);
+	$(`#creationname`).attr(`placeholder`, `我的盔甲座 #${localStorage.length + 1}`);
 	if (!localStorage.length) {
 		$(`#loadlistopts`).hide();
-		$(`#loadmessage`).text(`You do not have any creations to load!`);
+		$(`#loadmessage`).text(`沒有任何保存盔甲座資料！`);
 	} else {
 		$(`#loadlistopts`).show();
-		$(`#loadmessage`).text(`Load your saved creations`);
+		$(`#loadmessage`).text(`讀取你的保存盔甲座資料！`);
 		$(`#loadlist`).empty();
 		for (let i = 0; i < localStorage.length; i++) {
 			$(`#loadlist`).append(`<option value="${localStorage.key(i)}">${localStorage.key(i)}</option>`);
@@ -875,7 +875,7 @@ function rotateAroundWorldAxis(object, axis, radians, reset) {
 function saveData() {
 	// Handles saving of armor stand data
 	const SAVE_DATA = {
-		name: $(`#creationname`).val() === `` ? `My Armor Stand #${localStorage.length + 1}` : $(`#creationname`).val(),
+		name: $(`#creationname`).val() === `` ? `我的盔甲座 #${localStorage.length + 1}` : $(`#creationname`).val(),
 		version: $(`#mcversion`).val(),
 		
 		options: {
@@ -965,13 +965,13 @@ function saveData() {
 	localStorage.setItem(SAVE_DATA.name, JSON.stringify(SAVE_DATA));
 	loadScreen();
 	$(`#creationname`).val(``);
-	alert(`Awesome! Your creation has been saved as ${SAVE_DATA.name}.`);
+	alert(`資料已被保存名為 ${SAVE_DATA.name}.`);
 };
 
 function loadData(data) {
 	//console.log(`loading data!`);
 	data = localStorage.getItem(data);
-	if (!data) return alert(`An error occurred while loading the creation.`);
+	if (!data) return alert(`讀取盔甲座保存資料時發生錯誤。`);
 	
 	try {
 		data = JSON.parse(data);
@@ -1070,7 +1070,7 @@ function loadData(data) {
 		//console.log(`done loading!`)
 	} catch (err) {
 		console.error(err);
-		alert(`An error occurred while loading the creation.`);
+		alert(`讀取盔甲座保存資料時發生錯誤。`);
 	};
 	
 	//loadScreen();
@@ -1079,5 +1079,5 @@ function loadData(data) {
 function deleteSave(data) {
 	localStorage.removeItem(data);
 	loadScreen();
-	alert(`${data} has been deleted!`);
+	alert(`儲存盔甲座資料 ${data} 已成功被移除！`);
 };
