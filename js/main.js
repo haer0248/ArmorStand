@@ -41,6 +41,7 @@ var showArms = false;
 var small = false;
 var marker = false;
 var centercorrected = false;
+var give = false;
 
 var useEquipment;
 var equipHandRight;
@@ -54,6 +55,10 @@ var equipColorShoes;
 var equipColorLeggings;
 var equipColorChestplate;
 var equipColorHelmet;
+var helmetList;
+var chestplateList;
+var leggingsList;
+var bootsList;
 
 var customName;
 var showCustomName;
@@ -159,6 +164,7 @@ $(document).ready(function(){
 	$("#getcommandblock").hide();
 	$("#saveandload").hide();
 	$("#troubleshooting").hide();
+	$("#translate").hide();
 	$("#inputarms").hide();
 	$("#customequipment").hide();
 	$("#disabledslots").hide();
@@ -178,7 +184,12 @@ $(document).ready(function(){
             $(el).colpickHide();
             handleInput();
         }
-    });
+	});
+	
+	helmetList = $("#list-helmet").find("option");
+	chestplateList = $("#list-chestplate").find("option");
+	leggingsList = $("#list-leggings").find("option");
+	bootsList = $("#list-shoes").find("option");
 
 });
 
@@ -363,7 +374,7 @@ function handleInput(){
 	nameStrikethrough = getCheckBoxInput("namestrikethrough");
 
 	useDisabledSlots = getCheckBoxInput("usedisabledslots");
-
+	give = getCheckBoxInput("slashgive");
 
 	body.set(getRangeInput("bodyX"), getRangeInput("bodyY"), getRangeInput("bodyZ"));
 	head.set(getRangeInput("headX"), getRangeInput("headY"), getRangeInput("headZ"));
@@ -439,18 +450,45 @@ function updateUI(){
 	}
 
 	// Show disabled slots
-	if(useDisabledSlots)
+	if(useDisabledSlots) {
+		// Hide offhand disabled slot buttons for versions below 1.13
+		switch (mcVersion) {
+			case "1.13":
+			case "1.11":
+			case "1.9":
+			case "1.8":
+				$(".sprite.offhand").hide();
+				$("#dO").hide();
+				$("#rO").hide();
+				$("#pO").hide();
+				break;
+			
+			default:
+				$(".sprite.offhand").show();
+				$("#dO").show();
+				$("#rO").show();
+				$("#pO").show();
+				break;
+				
+		}
 		$("#disabledslots").slideDown();
+	}
 	else
 		$("#disabledslots").slideUp();
 	
 	//Hide 1.13 features for 1.12 and lower.
-	if (mcVersion == "1.13") {
-		$("#namecustomization").show()
-		$("#centercorrected").show()
-	} else {
-		$("#namecustomization").hide()
-		$("#centercorrected").hide()
+	switch (mcVersion) {
+		case "1.11":
+		case "1.9":
+		case "1.8":
+			$("#namecustomization").hide();
+			$("#centercorrected").hide();
+			break;
+		
+		default:
+			$("#namecustomization").show();
+			$("#centercorrected").show();
+			break;
 	}
 	
 	// Generate code
@@ -490,13 +528,21 @@ function updateUI(){
 function generateCode(){
 	var code = "/summon armor_stand ~ ~ ~ {" //in 1.13, positions are no longer center-corrected. Adding .5 makes it centered. However for players it is already center-corrected
 	
-	// Old entity name
-	if(mcVersion == "1.8" || mcVersion == "1.9"){
-		code = "/summon ArmorStand ~ ~ ~ {";
-	} else if (mcVersion == "1.11") {
-		code = "/summon armor_stand ~ ~ ~ {";
-	} else if (mcVersion == "1.13") {
-		centercorrected ? code = "/summon armor_stand ~ ~-0.5 ~ {" : code = "/summon armor_stand ~ ~ ~ {"
+	if (!give) {
+		// Old entity name
+		if(mcVersion == "1.8" || mcVersion == "1.9"){
+			code = "/summon ArmorStand ~ ~ ~ {";
+		} else if (mcVersion == "1.11") {
+			code = "/summon armor_stand ~ ~ ~ {";
+		} else {
+			centercorrected ? code = "/summon armor_stand ~ ~-0.5 ~ {" : code = "/summon armor_stand ~ ~ ~ {"
+		}
+	} else {
+		if(mcVersion == "1.8" || mcVersion == "1.9" || mcVersion == "1.11"){
+			code = "/give @p minecraft:armor_stand 1 0 {EntityTag:{";
+		} else {
+			code = "/give @p armor_stand{EntityTag:{"
+		}
 	}
 
 	var tags = [];
@@ -555,29 +601,66 @@ function generateCode(){
 
 			tags.push("HandItems:["+hands.join(",")+"]");
 		}
+
+		// Hide netherite armour for lower versions
+		switch (mcVersion) {
+			case "1.14":
+			case "1.13":
+				$("#list-helmet").empty().append(helmetList.filter("[value!=netherite_helmet]"));
+				$("#list-chestplate").empty().append(chestplateList.filter("[value!=netherite_chestplate]"));
+				$("#list-leggings").empty().append(leggingsList.filter("[value!=netherite_leggings]"));
+				$("#list-shoes").empty().append(bootsList.filter("[value!=netherite_boots]"));
+				break;
+			case "1.11":
+			case "1.9":
+			case "1.8":
+				$("#list-helmet").empty().append(helmetList.filter("[value!=netherite_helmet]").filter("[value!=turtle_helmet]"));
+				$("#list-chestplate").empty().append(chestplateList.filter("[value!=netherite_chestplate]").filter("[value!=turtle_chestplate]"));
+				$("#list-leggings").empty().append(leggingsList.filter("[value!=netherite_leggings]").filter("[value!=turtle_leggings]"));
+				$("#list-shoes").empty().append(bootsList.filter("[value!=netherite_boots]").filter("[value!=turtle_boots]"));
+				break;
+			default:
+				$("#list-helmet").empty().append(helmetList);
+				$("#list-chestplate").empty().append(chestplateList);
+				$("#list-leggings").empty().append(leggingsList);
+				$("#list-shoes").empty().append(bootsList);
+				break;
+		}
 	}
 
 	// Custom name
-	if(customName != "" && customName != null)
-		//New 1.13 format
-		if (mcVersion == "1.13") {
-			var name = [];
-			
-			name.push(getName());
-			name.push(getNameColor());
-			name.push(getNameBold());
-			name.push(getNameItalic());
-			name.push(getNameObfuscated());
-			name.push(getNameStrikethrough());
-			
-			//tags.push(`CustomName:\"${customName}\"`)
-			tags.push(`CustomName:"{${name.join("")}}"`)
-			//Old format
-		} else {
-			tags.push(`CustomName:\"${customName}\"`)
+	if(customName) {
+		let name = [];
+		switch (mcVersion) {
+			case "1.8":
+			case "1.9":
+			case "1.11":
+				tags.push(`CustomName:"${customName}"`);
+				break;
+			case "1.13":
+				name.push(getName());
+				name.push(getNameColor());
+				name.push(getNameBold());
+				name.push(getNameItalic());
+				name.push(getNameObfuscated());
+				name.push(getNameStrikethrough());
+				
+				tags.push(`CustomName:"{${name.join("")}}"`);
+				break;
+			default:
+				// CustomNames from 1.14+ can now use single quotes to contain json
+				// Replace escaped double quotes with single quotes to make it look pretty				
+				name.push(getName().replaceAll("\\", ""));
+				name.push(getNameColor().replaceAll("\\", ""));
+				name.push(getNameBold().replaceAll("\\", ""));
+				name.push(getNameItalic().replaceAll("\\", ""));
+				name.push(getNameObfuscated().replaceAll("\\", ""));
+				name.push(getNameStrikethrough().replaceAll("\\", ""));
+				tags.push(`CustomName:'{${name.join("")}}'`);
+				break;
 		}
+	}
 		
-		//mcVersion == "1.13" ? tags.push(`CustomName:"\\"${customName}\\""`) : tags.push("CustomName:\""+customName+"\"")
 	if(showCustomName)
 		tags.push("CustomNameVisible:1b");
 
@@ -609,6 +692,12 @@ function generateCode(){
 
 	code += tags.join(",");
 	code += "}";
+	if (give) {
+		code += "}";
+		if (mcVersion != "1.8" && mcVersion != "1.9" && mcVersion != "1.11") {
+			code += " 1"
+		}
+	}
 	return code;
 }
 
@@ -657,7 +746,7 @@ function getHeadItem(){
 	else if(equipCustomHeadMode == "player"){
 		if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
 			return "{id:\"skull\",Count:1b,Damage:3b,tag:{SkullOwner:\""+equipHelmet+"\"}}";
-		} else if (mcVersion == "1.13") {
+		} else {
 			return "{id:\"player_head\",Count:1b,tag:{SkullOwner:\""+equipHelmet+"\"}}";
 		}
 	}
@@ -665,13 +754,18 @@ function getHeadItem(){
 	// Use input as url
 	// Best reference: http://redd.it/24quwx
 	else if(equipCustomHeadMode == "url"){
-		var uuid = generateUUID();
-		var base64Value = btoa('{textures:{SKIN:{url:"'+equipHelmet+'"}}}');
+		var base64Value = btoa('{"textures":{"SKIN":{"url":"'+equipHelmet+'"}}}');
 		
-		if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
-			return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}';
-		} else if (mcVersion == "1.13") {
-			return '{id:"player_head",Count:1b,tag:{SkullOwner:{Id:'+uuid+',Properties:{textures:[{Value:'+base64Value+'}]}}}}';
+		switch (mcVersion) {
+			case "1.8":
+			case "1.9":
+			case "1.11":
+				return '{id:"skull",Count:1b,Damage:3b,tag:{SkullOwner:{Id:"'+generateUUID()+'",Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
+			case "1.13":
+			case "1.14":
+				return '{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:"'+generateUUID()+'",Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
+			default:
+				return '{id:"minecraft:player_head",Count:1b,tag:{SkullOwner:{Id:'+generateIntArray()+',Properties:{textures:[{Value:"'+base64Value+'"}]}}}}';
 		}
 	}
 
@@ -699,7 +793,7 @@ function getHeadItem(){
 			
 			if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
 				return '{id:"skull",Count:1b,Damage:3b,tag:{'+parsed+'}}';
-			} else if (mcVersion == "1.13") {
+			} else {
 				return '{id:"player_head",Count:1b,tag:{'+parsed+'}}';
 			}
 		}
@@ -710,7 +804,7 @@ function getHeadItem(){
 			skullOwnerRaw = skullOwnerRaw.substring(0, skullOwnerRaw.indexOf("}"));
 			if (mcVersion == "1.8" || mcVersion == "1.10" || mcVersion == "1.11") {
 				return '{id:"skull",Count:1b,Damage:3b,tag:{'+skullOwnerRaw+'}}';
-			} else if (mcVersion == "1.13") {
+			} else {
 				return '{id:"player_head",Count:1b,tag:{'+skullOwnerRaw+'}}';
 			}
 		}
@@ -750,26 +844,29 @@ function getNameObfuscated() {
 }
 
 function calculateDisabledSlotsFlag() {
+    var dO = $("#dO").is(":checked") ? 1 << (5) : 0;
     var dH = $("#dH").is(":checked") ? 1 << (4) : 0;
     var dC = $("#dC").is(":checked") ? 1 << (3) : 0;
     var dL = $("#dL").is(":checked") ? 1 << (2) : 0;
     var dB = $("#dB").is(":checked") ? 1 << (1) : 0;
     var dW = $("#dW").is(":checked") ? 1 << (0) : 0;
-    var dR = dH + dC + dL + dB + dW;
+    var dR = dO + dH + dC + dL + dB + dW;
 
+    var rO = $("#rO").is(":checked") ? 1 << (5 + 8) : 0;
     var rH = $("#rH").is(":checked") ? 1 << (4 + 8) : 0;
     var rC = $("#rC").is(":checked") ? 1 << (3 + 8) : 0;
     var rL = $("#rL").is(":checked") ? 1 << (2 + 8) : 0;
     var rB = $("#rB").is(":checked") ? 1 << (1 + 8) : 0;
     var rW = $("#rW").is(":checked") ? 1 << (0 + 8) : 0;
-    var rR = rH + rC + rL + rB + rW;
+    var rR = rO + rH + rC + rL + rB + rW;
 
+    var pO = $("#pO").is(":checked") ? 1 << (5 + 16) : 0;
     var pH = $("#pH").is(":checked") ? 1 << (4 + 16) : 0;
     var pC = $("#pC").is(":checked") ? 1 << (3 + 16) : 0;
     var pL = $("#pL").is(":checked") ? 1 << (2 + 16) : 0;
     var pB = $("#pB").is(":checked") ? 1 << (1 + 16) : 0;
     var pW = $("#pW").is(":checked") ? 1 << (0 + 16) : 0;
-    var pR = pH + pC + pL + pB + pW;
+    var pR = pO + pH + pC + pL + pB + pW;
 
     var result = dR + rR + pR;
     return result;
@@ -822,6 +919,23 @@ function generateUUID(){
         return (c=='x' ? r : (r&0x3|0x8)).toString(16);
     });
     return uuid;
+}
+
+function generateIntArray() {
+	const buffer = new Uint32Array(4);
+	const UUID = new DataView(buffer.buffer);
+	const paddings = [8, 4, 4, 4, 12];
+	
+	let hexUUID = generateUUID().split("-").map((val, i) => val.padStart(paddings[i], "0")).join("");
+	let ints = [];
+
+	for (let i = 0; i < 4; i++) { 
+		num = Number("0x" + hexUUID.substring(i*8, (i+1)*8));
+		UUID.setInt32(i*4, num);
+		ints.push(UUID.getInt32(i*4));
+	}
+
+	return '[I;' + ints.join(",") + ']';
 }
 
 function getDecimalRGB(rgb){
@@ -895,12 +1009,12 @@ function saveData() {
 			head: [getRangeInput("headX"), getRangeInput("headY"), getRangeInput("headZ")],
 			body: [getRangeInput("bodyX"), getRangeInput("bodyY"), getRangeInput("bodyZ")],
 			legs: {
-				left: [getRangeInput("leftLegX"), getRangeInput("leftLegY"), getRangeInput("leftLegX")],
+				left: [getRangeInput("leftLegX"), getRangeInput("leftLegY"), getRangeInput("leftLegZ")],
 				right: [getRangeInput("rightLegX"), getRangeInput("rightLegY"), getRangeInput("rightLegZ")],
 			},
 			arms: {
-				left: [getRangeInput("leftArmX"), getRangeInput("leftArmY"), getRangeInput("leftArmX")],
-				right: [getRangeInput("rightArmX"), getRangeInput("rightArmY"), getRangeInput("rightArmX")]
+				left: [getRangeInput("leftArmX"), getRangeInput("leftArmY"), getRangeInput("leftArmZ")],
+				right: [getRangeInput("rightArmX"), getRangeInput("rightArmY"), getRangeInput("rightArmZ")]
 			}
 		},
 	
@@ -943,21 +1057,24 @@ function saveData() {
 				chestplate: $("#dC").is(":checked"),
 				leggings: $("#dL").is(":checked"),
 				boots: $("#dB").is(":checked"),
-				weapons: $("#dW").is(":checked")
+				weapons: $("#dW").is(":checked"),
+				offhand: $("#dO").is(":checked")
 			},
 			replace: {
 				helmet: $("#rH").is(":checked"),
 				chestplate: $("#rC").is(":checked"),
 				leggings: $("#rL").is(":checked"),
 				boots: $("#rB").is(":checked"),
-				weapons: $("#rW").is(":checked")
+				weapons: $("#rW").is(":checked"),
+				offhand: $("#rO").is(":checked")
 			},
 			place: {
 				helmet: $("#pH").is(":checked"),
 				chestplate: $("#pC").is(":checked"),
 				leggings: $("#pL").is(":checked"),
 				boots: $("#pB").is(":checked"),
-				weapons: $("#pW").is(":checked")
+				weapons: $("#pW").is(":checked"),
+				offhand: $("#pO").is(":checked")
 			}
 		}
 	};
@@ -1048,18 +1165,21 @@ function loadData(data) {
 		//lock slot interaction
 		$("input[name=usedisabledslots]").prop(`checked`, data.lock_slot_interaction.enabled);
 		
+		$(`#dO`).prop(`checked`, data.lock_slot_interaction.remove.offhand);
 		$(`#dH`).prop(`checked`, data.lock_slot_interaction.remove.helmet);
 		$(`#dC`).prop(`checked`, data.lock_slot_interaction.remove.chestplate);
 		$(`#dL`).prop(`checked`, data.lock_slot_interaction.remove.leggings);
 		$(`#dB`).prop(`checked`, data.lock_slot_interaction.remove.boots);
 		$(`#dW`).prop(`checked`, data.lock_slot_interaction.remove.weapons);
 
+		$(`#rO`).prop(`checked`, data.lock_slot_interaction.replace.offhand);
 		$(`#rH`).prop(`checked`, data.lock_slot_interaction.replace.helmet);
 		$(`#rC`).prop(`checked`, data.lock_slot_interaction.replace.chestplate);
 		$(`#rL`).prop(`checked`, data.lock_slot_interaction.replace.leggings);
 		$(`#rB`).prop(`checked`, data.lock_slot_interaction.replace.boots);
 		$(`#rW`).prop(`checked`, data.lock_slot_interaction.replace.weapons);
 
+		$(`#pO`).prop(`checked`, data.lock_slot_interaction.place.offhand);
 		$(`#pH`).prop(`checked`, data.lock_slot_interaction.place.helmet);
 		$(`#pC`).prop(`checked`, data.lock_slot_interaction.place.chestplate);
 		$(`#pL`).prop(`checked`, data.lock_slot_interaction.place.leggings);

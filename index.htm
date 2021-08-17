@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-tw">
+<html>
 <head>
     <title>Minecraft 盔甲座指令</title>
     <meta charset="utf-8">
@@ -31,7 +31,9 @@
 
         <div class="padding underline">
             <select id="mcversion">
-				<option value="1.13">Minecraft 1.13 以上</option>
+                <option value="1.16">Minecraft 1.16 以上</option>
+                <option value="1.14">Minecraft 1.14 &amp; 1.15</option>
+                <option value="1.13">Minecraft 1.13</option>
                 <option value="1.11">Minecraft 1.11 &amp; 1.12</option>
                 <option value="1.9">Minecraft 1.9 &amp; 1.10</option>
                 <option value="1.8">Minecraft 1.8</option>
@@ -39,17 +41,17 @@
         </div>
 
         <div class="padding underline">
-            <label><input type="checkbox" name="invisible">隱藏</label><br>
+            <label><input type="checkbox" name="invisible">隱形</label><br>
             <label><input type="checkbox" name="invulnerable">無敵</label><br>
-            <label><input type="checkbox" name="persistencerequired">PersistenceRequired</label><br>
-            <label><input type="checkbox" name="nobaseplate">無底版</label><br>
+            <label><input type="checkbox" name="persistencerequired">可以被清除</label><br>
+            <label><input type="checkbox" name="nobaseplate">無底板</label><br>
             <label><input type="checkbox" name="nogravity">無重力</label><br>
             <label><input type="checkbox" name="showarms">顯示手臂</label><br>
             <label><input type="checkbox" name="small">小型</label><br>
             <label><input type="checkbox" name="marker">標記</label><br>
-			<div id="centercorrected">
-				<label><input type="checkbox" id="center-corrected" name="center-corrected">置中</label><br>
-			</div>
+            <div id="centercorrected">
+                <label><input type="checkbox" id="center-corrected" name="center-corrected">置中</label><br>
+            </div>
         </div>
 
         <div class="padding underline">
@@ -116,6 +118,7 @@
                     <option value="chainmail_boots">鎖鏈靴子
                     <option value="diamond_boots">鑽石靴子
                     <option value="golden_boots">黃金靴子
+                    <option value="netherite_boots">獄髓靴子
                     <option value="iron_boots">鐵製靴子
                     <option value="leather_boots">皮革靴子
                 </datalist>
@@ -126,6 +129,7 @@
                     <option value="chainmail_leggings">鎖鏈護腿
                     <option value="diamond_leggings">鑽石護腿
                     <option value="golden_leggings">黃金護腿
+                    <option value="netherite_leggings">獄髓護腿
                     <option value="iron_leggings">鐵製護腿
                     <option value="leather_leggings">皮革護腿
                 </datalist>
@@ -136,6 +140,7 @@
                     <option value="chainmail_chestplate">鎖鏈護甲
                     <option value="diamond_chestplate">鑽石護甲
                     <option value="golden_chestplate">黃金護甲
+                    <option value="netherite_chestplate">獄髓護甲
                     <option value="iron_chestplate">鐵製護甲
                     <option value="leather_chestplate">皮革護甲
                 </datalist>
@@ -147,6 +152,7 @@
                     <option value="chainmail_helmet">鎖鏈頭盔
                     <option value="diamond_helmet">鑽石頭盔
                     <option value="golden_helmet">黃金頭盔
+                    <option value="netherite_helmet">獄髓頭盔
                     <option value="iron_helmet">鐵製頭盔
                     <option value="leather_helmet">皮革頭盔
                 </datalist>
@@ -156,7 +162,7 @@
                 <select id="equipCustomHeadMode">
                     <option value="item">物品名稱</option>
                     <option value="player">玩家名稱</option>
-                    <option value="url">Skin網址</option>
+                    <option value="url">圖片網址</option>
                     <option value="givecode">給予代碼</option>
                 </select>
 
@@ -172,40 +178,42 @@
         <div class="padding underline">
             <input type="text" name="customname" id="customname" placeholder="自訂名稱">
             <label><input type="checkbox" name="showcustomname">顯示自訂名稱</label><br>
-			<div id="namecustomization">
-				<p>
-					在 1.13 你可以向自訂名稱添加顏色格式
-				</p>
-				<input type="text" name="namecolor" id="namecolor" placeholder="名稱顏色" list="list-colors">
-				<datalist id="list-colors">
-					<option value="green">a 綠色
-					<option value="aqua">b 青色
-					<option value="red">c 亮紅色
-					<option value="light_purple">d 亮紫色
-					<option value="yellow">e 黃色
-					<option value="white">f 白色
-					<option value="black">0 黑色
-					<option value="dark_blue">1 深藍色
-					<option value="dark_green">2 深綠色
-					<option value="dark_aqua">3 深青色
-					<option value="dark_red">4 深紅色
-					<option value="dark_purple">5 深紫色
-					<option value="gold">6 金色
-					<option value="gray">7 灰色
-					<option value="dark_gray">8 深灰色
-					<option value="blue">9 淺藍色
-				</datalist>
-				<div>
-					<label><input type="checkbox" id="namebold" name="namebold"><b>粗體</b></label>
-					<label><input type="checkbox" id="nameitalic" name="nameitalic"><i>斜體</i></label>
-					<label><input type="checkbox" id="nameobfuscated" name="nameobfuscated">亂碼</label>
-					<label><input type="checkbox" id="namestrikethrough" name="namestrikethrough"><del>刪除線</del></label>
-				</div>
-			</div>
+            <div id="namecustomization">
+                <p>
+                    在 1.13 你可以向自訂名稱添加顏色格式
+                    在名稱中輸入顏色 ID (例如 red, dark_blue) 可以給予顏色
+                </p>
+                <input type="text" name="namecolor" id="namecolor" placeholder="名稱顏色" list="list-colors">
+                <datalist id="list-colors">
+                    <option value="aqua">b 青色
+                    <option value="black">0 黑色
+                    <option value="blue">9 淺藍色
+                    <option value="dark_aqua">3 深青色
+                    <option value="dark_blue">1 深藍色
+                    <option value="dark_gray">8 深灰色
+                    <option value="dark_green">2 深綠色
+                    <option value="dark_purple">5 深紫色
+                    <option value="dark_red">4 深紅色
+                    <option value="gold">6 金色
+                    <option value="gray">7 灰色
+                    <option value="green">a 綠色
+                    <option value="light_purple">d 亮紫色
+                    <option value="red">c 亮紅色
+                    <option value="white">f 白色
+                    <option value="yellow">e 黃色
+                </datalist>
+                <div>
+                    <label><input type="checkbox" id="namebold" name="namebold"><b>粗體</b></label>
+                    <label><input type="checkbox" id="nameitalic" name="nameitalic"><i>斜體</i></label>
+                    <label><input type="checkbox" id="nameobfuscated" name="nameobfuscated">亂碼</label>
+                    <label><input type="checkbox" id="namestrikethrough" name="namestrikethrough"><del>刪除線</del></label>
+                </div>
+            </div>
         </div>
 
         <div class="padding">
             <!-- THANK YOU to reddit user Oozebull for this part. -->
+            <label><input type="checkbox" id="slashgive" name="slashgive">製作 /give</label>
             <label><input type="checkbox" name="usedisabledslots">鎖定裝備欄</label>
             <div id="disabledslots">
                 <div>
@@ -215,6 +223,7 @@
                     <span class="sprite" style="background-position: 0px -32px"></span>
                     <span class="sprite" style="background-position: 0px -48px"></span>
                     <span class="sprite" style="background-position: 0px -64px"></span>
+                    <span class="sprite offhand" style="background-position: 0px -80px"></span>
                 </div>
 
                 <div>
@@ -224,6 +233,7 @@
                     <span><input id="dL" type="checkbox"></input></span>
                     <span><input id="dB" type="checkbox"></input></span>
                     <span><input id="dW" type="checkbox"></input></span>
+                    <span><input id="dO" type="checkbox"></input></span>
                 </div>
                 <div>
                     <span class="first">覆蓋</span>
@@ -232,6 +242,7 @@
                     <span><input id="rL" type="checkbox"></input></span>
                     <span><input id="rB" type="checkbox"></input></span>
                     <span><input id="rW" type="checkbox"></input></span>
+                    <span><input id="rO" type="checkbox"></input></span>
                 </div>
                 <div>
                     <span class="first">放置</span>
@@ -240,6 +251,7 @@
                     <span><input id="pL" type="checkbox"></input></span>
                     <span><input id="pB" type="checkbox"></input></span>
                     <span><input id="pW" type="checkbox"></input></span>
+                    <span><input id="pO" type="checkbox"></input></span>
                 </div>
             </div>
         </div>
@@ -250,7 +262,7 @@
         </div>
         <div id="codeinfo" class="padding">
             <b>請注意:</b>
-            指令過長必須使用指令方塊召喚.
+            指令過長必須使用指令方塊召喚。
         </div>
 
     </div>
@@ -258,7 +270,7 @@
     <div class="right card">
         <span style="cursor: pointer;" onclick="javascript:$('#saveandload').slideToggle();">
             + 保存與讀取
-        </span>	
+        </span> 
         <div id="saveandload">
             <div class="padding">
                 <div id="save" class="padding underline">
@@ -285,7 +297,7 @@
     <div class="right card">
         <span style="cursor: pointer;" onclick="javascript:$('#getcommandblock').slideToggle();">
             + 給予指令方塊
-        </span>	
+        </span> 
         <br>
         <div id="getcommandblock">
             <div class="padding">
@@ -310,7 +322,6 @@
         </div>
     </div>
 
-
     <div class="right card">
         <span class="" style="cursor: pointer;" onclick="javascript:$('#translate').slideToggle();">
         + 翻譯
@@ -320,10 +331,9 @@
                 <b>網頁語系: 繁體中文</b>
                 使用開源 <a href="https://github.com/haselkern/Minecraft-ArmorStand" target="_blank">haselkern/Minecraft-ArmorStand</a> 更改並無使用任何方式利益。<br><br>
                 繁化者：<br>
-                <a href="https://fb.com/asuna.michael" target="_blank">Michael Lin (Facebook)</a><br>
-		    <a href="https://imgur.com/a/n38y6Lk" target="_blank">作者授權(GitHub Issue)</a><br>
-                <a href="https://github.com/haer0248" target="_blank">Haer0248 (GitHub)</a><br><br>
-                有部分尚未繁化是因為無法了解該處使用方式，若您知道請聯絡我！
+                <a href="https://fb.com/haer0248" target="_blank">Michael Lin (Facebook)</a><br>
+            <a href="https://imgur.com/a/n38y6Lk" target="_blank">作者授權 (GitHub Issue)</a><br>
+                <a href="https://github.com/haer0248" target="_blank">Haer0248 (GitHub)</a><br>
             </p>
         </div>
     </div>
