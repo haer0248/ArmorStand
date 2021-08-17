@@ -1082,7 +1082,7 @@ function saveData() {
 	localStorage.setItem(SAVE_DATA.name, JSON.stringify(SAVE_DATA));
 	loadScreen();
 	$(`#creationname`).val(``);
-	alert(`資料已被保存名為 ${SAVE_DATA.name}.`);
+	alert(`資料已被保存名為 ${SAVE_DATA.name}。`);
 };
 
 function loadData(data) {
