@@ -174,3 +174,8 @@ input[type="text"]:not(:last-child){
 .rotations input{
 	width: 100%;
 }
+
+.title_center {
+	width: 100%;
+	text-align: center;
+}

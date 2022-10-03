@@ -22,11 +22,11 @@
 
         <div class="padding underline">
             <h1>MINECRAFT 盔甲座</h1>
-            <center>
+            <div class="title_center">
                 <a href="https://github.com/haselkern/Minecraft-ArmorStand" target="_blank"><img src="images/github.png" alt="GitHub" title="GitHub" /></a>
                 <a href="https://www.twitter.com/haselcode" target="_blank"><img src="images/twitter.png" alt="Twitter" title="Twitter" /></a>
                 <a href="https://haselkern.com/armorstand" target="_blank"><img src="images/help.png" alt="haselkern.com/armorstand" title="help" /></a>
-            </center>
+            </div>
         </div>
 
         <div class="padding underline">
@@ -57,29 +57,29 @@
         <div class="padding underline">
             <table class="rotations">
                 <tr>
-                    <td>角度:</td>
+                    <td>角度：</td>
                     <td colspan="3"><input type="range" name="rotation" min="0" max="360" value="0"></td>
                 </tr>
                 <tr>
-                    <td>頭:</td>
+                    <td>頭部：</td>
                     <td><input type="range" name="headX" min="0" max="360" value="0"></td>
                     <td><input type="range" name="headY" min="0" max="360" value="0"></td>
                     <td><input type="range" name="headZ" min="0" max="360" value="0"></td>
                 </tr>
                 <tr>
-                    <td>身體:</td>
+                    <td>身體：</td>
                     <td><input type="range" name="bodyX" min="0" max="360" value="0"></td>
                     <td><input type="range" name="bodyY" min="0" max="360" value="0"></td>
                     <td><input type="range" name="bodyZ" min="0" max="360" value="0"></td>
                 </tr>
                 <tr>
-                    <td>左腳:</td>
+                    <td>左腳：</td>
                     <td><input type="range" name="leftLegX" min="0" max="360" value="0"></td>
                     <td><input type="range" name="leftLegY" min="0" max="360" value="0"></td>
                     <td><input type="range" name="leftLegZ" min="0" max="360" value="0"></td>
                 </tr>
                 <tr>
-                    <td>右腳:</td>
+                    <td>右腳：</td>
                     <td><input type="range" name="rightLegX" min="0" max="360" value="0"></td>
                     <td><input type="range" name="rightLegY" min="0" max="360" value="0"></td>
                     <td><input type="range" name="rightLegZ" min="0" max="360" value="0"></td>
@@ -88,13 +88,13 @@
             <div id="inputarms">
                 <table class="rotations">
                         <tr>
-                            <td>左手:</td>
+                            <td>左手：</td>
                             <td><input type="range" name="leftArmX" min="0" max="360" value="0"></td>
                             <td><input type="range" name="leftArmY" min="0" max="360" value="0"></td>
                             <td><input type="range" name="leftArmZ" min="0" max="360" value="0"></td>
                         </tr>
                         <tr>
-                            <td>右手:</td>
+                            <td>右手：</td>
                             <td><input type="range" name="rightArmX" min="0" max="360" value="0"></td>
                             <td><input type="range" name="rightArmY" min="0" max="360" value="0"></td>
                             <td><input type="range" name="rightArmZ" min="0" max="360" value="0"></td>
@@ -104,10 +104,10 @@
         </div>
 
         <div class="padding underline">
-            <label><input type="checkbox" name="useequipment">啟用裝備</label><br>
+            <label><input type="checkbox" name="useequipment">啟用裝備欄</label><br>
             <div id="customequipment">
                 <p>
-                    在相對應的輸入框輸入 ( <i>stone</i> 或 <i>iron_sword</i>) 您可以為頭部輸入任何物品，但在其他地方必須是正確的物品.
+                    在相對應的輸入框輸入（<i>stone</i> 或 <i>iron_sword</i>）您可以為頭部或手部輸入任何物品，但在其他地方必須是正確的物品。
                 </p>
 
                 <input type="text" class="equipment" name="equipHandRight" placeholder="右手物品">
@@ -168,7 +168,7 @@
 
                 <div id="minecraft-heads">
                     <br>
-                    您可以到以下網站複製 Code 並貼上:
+                    您可以到以下網站複製代碼並貼上:
                     <br>
                     <a href="http://minecraft-heads.com/" target="_blank"><img src="images/mc-heads.png" alt="minecraft-heads.com" /></a>
                 </div>
@@ -180,8 +180,8 @@
             <label><input type="checkbox" name="showcustomname">顯示自訂名稱</label><br>
             <div id="namecustomization">
                 <p>
-                    在 1.13 你可以向自訂名稱添加顏色格式
-                    在名稱中輸入顏色 ID (例如 red, dark_blue) 可以給予顏色
+                    在 1.13 你可以向自訂名稱新增顏色格式
+                    在名稱中輸入顏色 ID （例如 red, dark_blue） 可以給予顏色
                 </p>
                 <input type="text" name="namecolor" id="namecolor" placeholder="名稱顏色" list="list-colors">
                 <datalist id="list-colors">
@@ -211,9 +211,17 @@
             </div>
         </div>
 
+        <div class="padding underline">
+            <p>
+                新增記分板標籤到盔甲座。<br/>
+                當新增多個標籤時，請使用半形逗號（,）來分開。
+            </p>
+            <input type="text" name="scoreboardtags" id="scoreboardtags" placeholder="Tag1, Tag2">
+        </div>
+
         <div class="padding">
             <!-- THANK YOU to reddit user Oozebull for this part. -->
-            <label><input type="checkbox" id="slashgive" name="slashgive">製作 /give</label>
+            <label><input type="checkbox" id="slashgive" name="slashgive">產生為 /give 指令</label>
             <label><input type="checkbox" name="usedisabledslots">鎖定裝備欄</label>
             <div id="disabledslots">
                 <div>
@@ -261,7 +269,7 @@
             <div id="code"></div>
         </div>
         <div id="codeinfo" class="padding">
-            <b>請注意:</b>
+            <b>請注意：</b>
             指令過長必須使用指令方塊召喚。
         </div>
 
@@ -317,7 +325,7 @@
         <div id="troubleshooting">
             <p>
                 <b>網頁使用 WebGL!</b>
-                如果你無法看見任何東西請參考 <a href="http://get.webgl.org/">WebGL 官方網站</a> 來解決問題.
+                如果你無法看見任何東西，請參考 <a href="http://get.webgl.org/">WebGL 官方網站</a> 來解決問題.
             </p>
         </div>
     </div>
@@ -328,11 +336,11 @@
         </span>
         <div id="translate">
             <p>
-                <b>網頁語系: 繁體中文</b>
+                <b>網頁語系：繁體中文</b>
                 使用開源 <a href="https://github.com/haselkern/Minecraft-ArmorStand" target="_blank">haselkern/Minecraft-ArmorStand</a> 更改並無使用任何方式利益。<br><br>
                 繁化者：<br>
                 <a href="https://fb.com/haer0248" target="_blank">Michael Lin (Facebook)</a><br>
-            <a href="https://imgur.com/a/n38y6Lk" target="_blank">作者授權 (GitHub Issue)</a><br>
+                <a href="https://imgur.com/a/n38y6Lk" target="_blank">作者授權 (GitHub Issue)</a><br>
                 <a href="https://github.com/haer0248" target="_blank">Haer0248 (GitHub)</a><br>
             </p>
         </div>
